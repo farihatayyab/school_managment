@@ -28,17 +28,19 @@ class AnnouncementController extends Controller
    
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'status' => 'required|in:active,inactive',
-        ]);
+  public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'date_posted' => 'required|date',
+        'status' => 'required|in:active,inactive',
+    ]);
 
-        $announcement = Announcement::create($request->all());
-        return response()->json($announcement);
-    }
+    $announcement = Announcement::create($request->all());
+    return response()->json($announcement);
+}
+
 
     public function update(Request $request, $id)
 {

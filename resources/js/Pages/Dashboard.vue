@@ -1,14 +1,19 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { Megaphone } from 'lucide-vue-next';
-import { ref } from 'vue';
+
 defineProps({
   totalAnnouncements: Number,
-    totalStudents: Number,
-    totalTeachers: Number,
-    totalClasses: Number,
-     userRole: String
+  totalStudents: Number,
+  totalTeachers: Number,
+  totalClasses: Number,
+  totalSubjects: Number,
+  totalAttendence: Number,
+  totalExams: Number,
+  totalResults: Number,
+  totalPaidFees: Number,
+  studentPaidFees: Number,
+  userRole: String
 });
 </script>
 
@@ -17,93 +22,130 @@ defineProps({
 
   <AuthenticatedLayout>
     <template #header>
-      <div class="relative flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-purple-100 via-white to-purple-50 pt-20 px-6">
-        
-        <!-- 🏫 Page Heading -->
-      <div class="text-center mb-16">
-  <h1 class="text-5xl font-extrabold text-purple-700 mb-3 tracking-tight drop-shadow-sm">
-    🎓 Welcome to 
-    <span v-if="userRole === 'admin'">Admin Dashboard</span>
-    <span v-else-if="userRole === 'teacher'">Teacher Dashboard</span>
-    <span v-else-if="userRole === 'student'">Student Dashboard</span>
-  </h1>
-  <p class="text-gray-600 text-lg">
-    Overview of your portal insights at a glance
-  </p>
-</div>
+      <div class="min-h-screen flex flex-col items-center bg-gradient-to-b from-[#f9f9fb] via-[#fafafb] to-[#f2f2f4] py-16 px-6">
 
-        <!-- 📊 Stats Section -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl -mt-8">
-          
-     
-       <!-- 📢 Announcements Card -->
-            <Link
-            :href="route('announcements.index')" 
-            class="group flex items-center justify-between bg-white rounded-2xl shadow-xl border border-purple-200 hover:border-purple-300 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-3 p-8 cursor-pointer"
-            >
-            <div>
-                <p class="text-gray-500 text-sm uppercase font-semibold">Total Announcements</p>
-                <h2 class="text-5xl font-extrabold text-purple-700 mt-2 group-hover:text-purple-800 transition-colors">
-                {{ totalAnnouncements }}
-                </h2>
-            </div>
-            <div class="bg-purple-100 p-4 rounded-full border border-purple-300 shadow-inner">
-                <i class="fa-solid fa-bullhorn text-3xl text-purple-700"></i>
-            </div>
-            </Link>
+        <!-- 🌸 Heading -->
+        <div class="text-center mb-16">
+          <h1 class="text-5xl font-extrabold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text drop-shadow-md">
+            Welcome to
+            <span v-if="userRole === 'admin'"> Admin </span>
+            <span v-else-if="userRole === 'teacher'"> Teacher </span>
+            <span v-else> Student </span>
+            Dashboard
+          </h1>
+          <p class="mt-4 text-gray-500 text-lg tracking-wide">
+            Your calm and beautiful space for learning insights 🌿
+          </p>
+        </div>
 
-
-          <!-- 👩‍🎓 Students Card -->
+        <!-- ✨ Dashboard Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl">
           <Link
-            :href="route('students.index')" 
-            class="group flex items-center justify-between bg-white rounded-2xl shadow-xl border border-blue-200 hover:border-blue-300 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-3 p-8"
+            v-for="(card, index) in cards"
+            :key="index"
+            :href="card.route"
+            class="group relative flex items-center justify-between backdrop-blur-md bg-white/60 border border-gray-100 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 p-8 hover:-translate-y-2 hover:bg-white/70"
           >
-            <div>
-              <p class="text-gray-500 text-sm uppercase font-semibold">Total Students</p>
-              <h2 class="text-5xl font-extrabold text-blue-600 mt-2 group-hover:text-blue-700 transition-colors">
-                     {{ totalStudents }}
+            <!-- gradient ring on hover -->
+            <div class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-indigo-100 via-pink-100 to-purple-100"></div>
+
+            <div class="relative z-10">
+              <p class="text-gray-500 text-sm uppercase font-semibold tracking-wide">{{ card.title }}</p>
+              <h2 class="text-5xl font-extrabold text-gray-800 mt-3 group-hover:text-indigo-600 transition-colors duration-500">
+                {{ card.value }}
               </h2>
             </div>
-            <div class="bg-blue-100 p-4 rounded-full border border-blue-300 shadow-inner">
-              <i class="fa-solid fa-user-graduate text-3xl text-blue-600"></i>
-            </div>
-             </Link>
 
-          <!-- 👨‍🏫 Teachers Card -->
-          <Link
-            :href="route('teachers.index')" 
-            class="group flex items-center justify-between bg-white rounded-2xl shadow-xl border border-green-200 hover:border-green-300 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-3 p-8"
-          >
-            <div>
-              <p class="text-gray-500 text-sm uppercase font-semibold">Total Teachers</p>
-              <h2 class="text-5xl font-extrabold text-green-600 mt-2 group-hover:text-green-700 transition-colors">
-                 {{ totalTeachers }}
-              </h2>
+            <div class="relative z-10 bg-gradient-to-tr from-indigo-100 to-pink-100 p-5 rounded-2xl border border-gray-200 shadow-inner group-hover:scale-110 transition-transform duration-500">
+              <i :class="card.icon + ' text-3xl text-indigo-500'"></i>
             </div>
-            <div class="bg-green-100 p-4 rounded-full border border-green-300 shadow-inner">
-              <i class="fa-solid fa-chalkboard-teacher text-3xl text-green-600"></i>
-            </div>
-            </Link>
-
-            <!-- 🏫 Classes Card -->
-            <Link
-            :href="route('class-rooms.index')" 
-            class="group flex items-center justify-between bg-white rounded-2xl shadow-xl border border-yellow-200 hover:border-yellow-300 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-3 p-8"
-            >
-            <div>
-                <p class="text-gray-500 text-sm uppercase font-semibold">Total Classes</p>
-                <h2 class="text-5xl font-extrabold text-yellow-600 mt-2 group-hover:text-yellow-700 transition-colors">
-                {{ totalClasses }}
-                </h2>
-            </div>
-            <div class="bg-yellow-100 p-4 rounded-full border border-yellow-300 shadow-inner">
-                <i class="fa-solid fa-book text-3xl text-yellow-600"></i>
-            </div>
-            </Link>
-
-
+          </Link>
         </div>
       </div>
     </template>
   </AuthenticatedLayout>
 </template>
+
+<script>
+export default {
+  computed: {
+    cards() {
+      return [
+        {
+          title: 'Total Announcements',
+          value: this.totalAnnouncements,
+          icon: 'fa-solid fa-bullhorn',
+          route: this.route('announcements.index')
+        },
+        {
+          title: 'Total Students',
+          value: this.totalStudents,
+          icon: 'fa-solid fa-user-graduate',
+          route: this.route('students.index')
+        },
+        {
+          title: 'Total Teachers',
+          value: this.totalTeachers,
+          icon: 'fa-solid fa-chalkboard-teacher',
+          route: this.route('teachers.index')
+        },
+        {
+          title: 'Total Classes',
+          value: this.totalClasses,
+          icon: 'fa-solid fa-school',
+          route: this.route('class-rooms.index')
+        },
+        {
+          title: 'Total Subjects',
+          value: this.totalSubjects,
+          icon: 'fa-solid fa-book-open',
+          route: this.route('subjects.index')
+        },
+        {
+          title: 'Total Attendance',
+          value: this.totalAttendence,
+          icon: 'fa-solid fa-calendar-check',
+          route: this.route('attendances.index')
+        },
+        {
+          title: 'Total Exams',
+          value: this.totalExams,
+          icon: 'fa-solid fa-file-pen',
+          route: this.route('exams.index')
+        },
+        {
+          title: 'Exam Results',
+          value: this.totalResults,
+          icon: 'fa-solid fa-award',
+          route: this.route('results.index')
+        },
+        {
+          title: this.userRole === 'student' ? 'Your Paid Fees' : 'Total Paid Fees (Students)',
+          value: this.userRole === 'student' ? this.studentPaidFees : this.totalPaidFees,
+          icon: 'fa-solid fa-sack-dollar',
+          route: this.route('fees.index')
+        }
+      ];
+    }
+  }
+};
+</script>
+
+<style scoped>
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.group {
+  transition: all 0.5s ease;
+}
+
+.group:hover h2 {
+  letter-spacing: 0.5px;
+}
+
+/* soft pulse glow */
+.group:hover {
+  box-shadow: 0 10px 40px -10px rgba(100, 100, 255, 0.2);
+}
+</style>

@@ -5,40 +5,48 @@
         <h1 class="page-title">📢 Announcements</h1>
 
         <!-- ✅ Admin Add/Edit Form -->
-        <div
-          v-if="auth.user.role === 'admin'"
-          class="form-container"
-        >
-          <h2 class="form-heading">
-            {{ form.id ? "✏️ Update Announcement" : "➕ Add New Announcement" }}
-          </h2>
+      <!-- ✅ Admin Add/Edit Form -->
+<div v-if="auth.user.role === 'admin'" class="form-container">
+  <h2 class="form-heading">
+    {{ form.id ? "✏️ Update Announcement" : "➕ Add New Announcement" }}
+  </h2>
 
-          <form @submit.prevent="saveAnnouncement" class="form-grid">
-            <input
-              v-model="form.title"
-              type="text"
-              placeholder="Title"
-              class="input-field"
-              required
-            />
-            <textarea
-              v-model="form.description"
-              placeholder="Description"
-              class="input-field"
-              required
-            ></textarea>
-            <select v-model="form.status" class="input-field" required>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
+  <form @submit.prevent="saveAnnouncement" class="form-grid">
+    <input
+      v-model="form.title"
+      type="text"
+      placeholder="Title"
+      class="input-field"
+      required
+    />
 
-            <div class="btn-wrapper">
-              <button type="submit" class="main-btn">
-                {{ form.id ? "Update" : "Add" }}
-              </button>
-            </div>
-          </form>
-        </div>
+    <input
+      v-model="form.date_posted"
+      type="date"
+      class="input-field"
+      required
+    />
+
+    <textarea
+      v-model="form.description"
+      placeholder="Description"
+      class="input-field"
+      required
+    ></textarea>
+
+    <select v-model="form.status" class="input-field" required>
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+    </select>
+
+    <div class="btn-wrapper">
+      <button type="submit" class="main-btn">
+        {{ form.id ? "Update" : "Add" }}
+      </button>
+    </div>
+  </form>
+</div>
+
 
         <!-- ✅ Announcements Table -->
         <div class="table-container">
@@ -63,15 +71,16 @@
                 <td>{{ i + 1 }}</td>
                 <td>{{ a.title }}</td>
                 <td>{{ a.description }}</td>
-                <td>{{ a.date_posted }}</td>
+             <td>{{ new Date(a.date_posted).toLocaleDateString() }}</td>
+
                 
-              <td>
-  <span
-    :class="a.status.toLowerCase() === 'active' ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'"
-  >
-    {{ a.status }}
-  </span>
-</td>
+                          <td>
+              <span
+                :class="a.status.toLowerCase() === 'active' ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'"
+              >
+                {{ a.status }}
+              </span>
+            </td>
 
                 <td v-if="auth.user.role === 'admin'" class="actions">
                   <button @click="editAnnouncement(a)" class="edit-btn">
@@ -111,6 +120,7 @@ const form = ref({
   id: null,
   title: "",
   description: "",
+    date_posted: new Date().toISOString().split("T")[0], // default = today
   status: "active",
 });
 

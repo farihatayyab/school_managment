@@ -60,5 +60,14 @@ public function isStudent()
 {
     return $this->role === 'student';
 }
+public function teacher()
+{
+    return $this->hasOne(Teacher::class, 'user_id');
+}
+
+public function student()
+{
+    return $this->hasOne(Student::class, 'user_id');
+}
 
 }
